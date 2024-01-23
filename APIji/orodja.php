@@ -1,5 +1,15 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Authorization, Content-Type");
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+
 /**
  * Funkcija vzpostavi povezavo z zbirko podatkov na proceduralni način
  *
@@ -10,7 +20,7 @@ function dbConnect()
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
-	$dbname = "igra";
+	$dbname = "moj_projekt";
 
 	// Ustvarimo povezavo do podatkovne zbirke
 	$conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -45,12 +55,12 @@ function pripravi_odgovor_napaka($vsebina)
  * @param $vzdevek Vzdevek igralca
  * @return true, če igralec obstaja, v nasprotnem primeru false
  */
-function igralec_obstaja($vzdevek)
+function uporabnik_obstaja($vzdevek)
 {	
 	global $zbirka;
 	$vzdevek=mysqli_escape_string($zbirka, $vzdevek);
 	
-	$poizvedba="SELECT * FROM igralec WHERE vzdevek='$vzdevek'";
+	$poizvedba="SELECT * FROM uporabniki WHERE vzdevek='$vzdevek'";
 	
 	if(mysqli_num_rows(mysqli_query($zbirka, $poizvedba)) > 0)
 	{
@@ -61,6 +71,26 @@ function igralec_obstaja($vzdevek)
 		return false;
 	}	
 }
+
+
+function ID_uporabnika_obstaja($ID_uporabnika) {
+    global $zbirka;
+	$ID_uporabnika=mysqli_escape_string($zbirka, $ID_uporabnika);
+	
+	$poizvedba="SELECT * FROM uporabniki WHERE ID='$ID_uporabnika'";
+	
+	if(mysqli_num_rows(mysqli_query($zbirka, $poizvedba)) > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
 
 /**
  * Funkcija pripravi URL podanega vira
