@@ -1,0 +1,31 @@
+RewriteEngine On 				# Vklopi 'rewriting engine'
+
+RewriteRule ^uporabniki/?$ uporabniki.php [NC,L]	# če gre za zahtevek na relativni URL '/uporabniki' ga spremeni v 'uporabniki.php'
+
+RewriteRule ^uporabniki/(.+)/?$ uporabniki.php?vzdevek=$1 [NC,L] 	# preslika vzorec 'uporabniki/xxxx' v 'uporabniki.php?vzdevek=xxxx'
+
+RewriteRule ^ledger/?$ ledger.php [NC,L]
+RewriteRule ^ledger/([0-9]+)/?$ ledger.php?ID_uporabnika=$1 [NC,L] 
+
+RewriteRule ^bilanca/?$ bilanca.php [NC,L]
+RewriteRule ^bilanca/([0-9]+)/?$ bilanca.php?ID_uporabnika=$1 [NC,L] 
+
+RewriteRule ^igra/?$ igra.php [NC,L] 
+RewriteRule ^igra/([a-zA-Z]+)/?$ igra.php?vzdevek=$1 [NC,L] # match any string
+RewriteRule ^igra/([0-9]+)/?$ igra.php?tezavnost=$1 [NC,L] # match any number
+
+RewriteRule ^dropdownvrsta/?$ dropdownvrsta.php [NC,L]	# če gre za zahtevek na relativni URL '/uporabniki' ga spremeni v 'uporabniki.php'
+RewriteRule ^dropdownnamen/?$ dropdownnamen.php [NC,L]
+
+# Rewrite rule for pridobi_vrste
+#RewriteRule ^mojProjekt/zaledje/APIji/dropdo/pridobi_vrste$ pridobi_vrste.php [L]
+
+# Rewrite rule for pridobi_namene
+#RewriteRule ^mojProjekt/zaledje/APIji/ledger/pridobi_namene$ pridobi_namene.php [L]
+
+
+# Onemogočimo direkten dostop do orodja.php
+<Files orodja.php>
+Order allow,deny
+Deny from all
+</Files>

@@ -23,11 +23,11 @@ switch($_SERVER["REQUEST_METHOD"])		// Glede na HTTP metodo v zahtevi izberemo u
 
 		break;
 
-	case 'POST':
+	//case 'POST':
 	
-		dodaj_uporabnika();
+		//dodaj_uporabnika();
 		
-		break;
+	//	break;
 		/*
 			//primer podatkov, ki jih mora odjemalec poslati v zahtevi
 			{
@@ -107,7 +107,7 @@ function pridobi_uporabnika($vzdevek)
 		http_response_code(404);	//Not found
 	}
 }
-
+/*
 function dodaj_uporabnika(){
 	
 	global $zbirka, $DEBUG;
@@ -154,7 +154,7 @@ function dodaj_uporabnika(){
 		http_response_code(400); //bad reqest
 	}
 }
-	
+*/	
 function posodobi_uporabnika($vzdevek){
 
 	global $zbirka, $DEBUG, $vzdevek;

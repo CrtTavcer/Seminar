@@ -11,20 +11,11 @@ header('Content-Type: application/json');	// Nastavimo MIME tip vsebine odgovora
 switch($_SERVER["REQUEST_METHOD"])		// Glede na HTTP metodo v zahtevi izberemo ustrezno dejanje nad virom
 {
     case 'GET':
-        pridobi_vnose_uporabnika();		// Če odjemalec posreduje vzdevek, mu vrnemo podatke izbranega uporabnika
+
+        pridobi_vnose_uporabnika(); // Default case for getting all entries
+    
         break;
-    /*
-	case 'GET':
-		if(!empty($_GET["ID_uporabnika"]))
-		{
-			pridobi_vnose_uporabnika($_GET["ID_uporabnika"]);		// Če odjemalec posreduje ID, mu vrnemo podatke izbranega uporabnika
-		}
-		else
-		{
-			pridobi_vse_vnose();					
-		}
-		break;
-        */
+
     case 'POST':
         dodaj_vnos();
         break;
@@ -57,7 +48,7 @@ function pridobi_vnose_uporabnika(){
     INNER JOIN vrsta ON ledger.ID_vrsta = vrsta.ID_vrsta
     INNER JOIN namen ON ledger.ID_namen = namen.ID_namen
     WHERE ID_uporabnika='$ID'
-    ORDER BY datum";
+    ORDER BY ID_ledger DESC";
 
     $rezultat = mysqli_query($zbirka, $poizvedba);
 
@@ -78,34 +69,7 @@ function pridobi_vnose_uporabnika(){
         http_response_code(404); //not found
     }
 }
-/*
-function pridobi_vnose_uporabnika($ID){
-    global $zbirka, $DEBUG, $ID;
 
-    $ID=mysqli_escape_string($zbirka, $_GET["ID_uporabnika"]);
-  
-    $poizvedba="SELECT * FROM ledger WHERE ID_uporabnika='$ID'";
-
-    $rezultat=mysqli_query($zbirka, $poizvedba);
-
-    if(mysqli_num_rows($rezultat) > 0)
-    {
-        $vnosi=array();
-        while($vnos=mysqli_fetch_assoc($rezultat))
-        {
-            $vnosi[]=$vnos;
-        }
-        echo json_encode($vnosi);
-    }
-    else
-    {
-        if ($DEBUG){
-            pripravi_odgovor_napaka("Uporabnik nima vnosev", 111);
-        }
-        http_response_code(404); //not found
-    }
-}
-*/
 function pridobi_vse_vnose(){
     global $zbirka, $DEBUG;
 
@@ -130,52 +94,6 @@ function pridobi_vse_vnose(){
         http_response_code(404); //not found
     }
 }
-/*
-function dodaj_vnos(){
-
-    global $zbirka, $DEBUG;
-
-    $podatki = json_decode(file_get_contents("php://input"),true);
-    if(isset($podatki["ID_uporabnika"], $podatki["vsota"], $podatki["ID_vrsta"], $podatki["ID_namen"]))
-    {
-        $ID_uporabnika = $podatki["ID_uporabnika"];
-        $vsota = mysqli_escape_string($zbirka, $podatki["vsota"]);
-        $namen = mysqli_escape_string($zbirka, $podatki["ID_namen"]);
-        $vrsta = mysqli_escape_string($zbirka, $podatki["ID_vrsta"]);
-        $uporabnik = mysqli_escape_string($zbirka, $ID_uporabnika);
-
-        // Check if ID_uporabnika exists
-        if (ID_uporabnika_obstaja($ID_uporabnika)) {
-            $poizvedba = "INSERT INTO ledger (vsota, ID_uporabnika, ID_vrsta, ID_namen) VALUES ('$vsota', '$uporabnik', '$vrsta', '$namen')";
-
-            if(mysqli_query($zbirka, $poizvedba))
-            {
-                http_response_code(201); //created
-            }
-            else
-            {
-                if ($DEBUG){
-                    pripravi_odgovor_napaka("Napaka", 111);
-                }
-                http_response_code(400); //bad request
-            }
-        } else {
-            if ($DEBUG){
-                pripravi_odgovor_napaka("Uporabnik z ID $ID_uporabnika ne obstaja", 111);
-            }
-            http_response_code(400); //bad request
-        }
-    }
-    else
-    {
-        if ($DEBUG){
-            pripravi_odgovor_napaka("Napaka pri pridobivanju podatkov", 111);
-        }
-        http_response_code(400); //bad request
-    }
-}
-*/
-
 
 function dodaj_vnos(){
 
@@ -198,13 +116,13 @@ function dodaj_vnos(){
         else
         {
             http_response_code(400); //bad request
-            echo json_encode("Napaka pri pridobivanju podatkov");
+            echo json_encode("Napaka pri dodajanju podatkov");
         }
     }
     else
     {
         if ($DEBUG){
-            pripravi_odgovor_napaka("Napaka pri pridobivanju podatkov", 111);
+            pripravi_odgovor_napaka("Napaka pri dodajanju podatkov", 111);
         }
         http_response_code(400); //bad request
         echo json_encode($podatki);
